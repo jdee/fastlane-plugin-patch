@@ -9,7 +9,7 @@ module Fastlane
                                                  params[:regexp],
                                                  params[:text],
                                                  params[:global],
-                                                 params[:prepend],
+                                                 params[:mode],
                                                  params[:offset]
           file.write modified_contents
         end
@@ -58,11 +58,11 @@ module Fastlane
                                   optional: true,
                              default_value: 0,
                                       type: Integer),
-          FastlaneCore::ConfigItem.new(key: :prepend,
-                               description: "If true, prepend the text to the pattern rather than appending",
+          FastlaneCore::ConfigItem.new(key: :mode,
+                               description: ":append, :prepend or :replace",
                                   optional: true,
-                             default_value: false,
-                                 is_string: false)
+                             default_value: :append,
+                                      type: Symbol)
         ]
       end
 
