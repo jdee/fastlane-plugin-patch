@@ -30,13 +30,15 @@ parameter to apply the patch to all instances of the regular expression.
 The `regexp`, `text`, `mode` and `global` options may be specified in a YAML file to
 define a patch, e.g.:
 
+**patch.yaml**:
 ```yaml
 regexp: '^\s*</application>'
-mode: "prepend"
-text: "        <meta-data android:name=\"foo\" android:value=\"bar\" />\n"
+mode: 'prepend'
+text: "        <meta-data android:name='foo' android:value='bar' />\n"
 global: false
 ```
 
+**Fastfile**:
 ```Ruby
 apply_patch file: "examples/PatchTestAndroid/app/src/main/AndroidManifest.xml",
             patch: "patch.yaml"
