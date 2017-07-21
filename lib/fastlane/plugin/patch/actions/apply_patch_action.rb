@@ -3,16 +3,17 @@ module Fastlane
     class ApplyPatchAction < Action
       def self.run(params)
         helper = Fastlane::Helper::PatchHelper
-        File.open(params[:file], "w") do |f|
-          contents = file.read
+        modified_contents = File.open(params[:file], "r") do |f|
+          contents = f.read
           modified_contents = helper.apply_patch contents,
                                                  params[:regexp],
                                                  params[:text],
                                                  params[:global],
                                                  params[:mode],
                                                  params[:offset]
-          file.write modified_contents
         end
+
+        File.open(params[:file], "w") { |f| f.write modified_contents }
       rescue => e
         UI.user_error! "Error in ApplyPatchAction: #{e.message}\n#{e.backtrace}"
       end

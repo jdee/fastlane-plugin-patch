@@ -1,4 +1,5 @@
 *.gem
+.idea
 
 ## Documentation cache and generated files:
 /.yardoc/
