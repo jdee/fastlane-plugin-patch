@@ -27,16 +27,35 @@ the action appends the specified text to the pattern match. It can also prepend
 the text or replace the pattern match with the text. Use an optional `:global`
 parameter to apply the patch to all instances of the regular expression.
 
+The `regexp`, `text`, `mode` and `global` options may be specified in a YAML file to
+define a patch, e.g.:
+
+```yaml
+regexp: '^\s*</application>'
+mode: "prepend"
+text: "        <meta-data android:name=\"foo\" android:value=\"bar\" />\n"
+global: false
+```
+
+```Ruby
+apply_patch file: "examples/PatchTestAndroid/app/src/main/AndroidManifest.xml",
+            patch: "patch.yaml"
+```
+
 ### Options
 
 |key|description|type|optional|default value|
 |---|-----------|----|--------|-------------|
 |:file|Absolute or relative path to a file to patch|String|no| |
-|:regexp|A regular expression to match|Regexp|no| |
-|:text|Text to append to the match|String|no| |
+|:regexp|A regular expression to match|Regexp|yes| |
+|:text|Text to append to the match|String|yes| |
 |:global|If true, patch all occurrences of the pattern|Boolean|yes|false|
 |:mode|:append, :prepend or :replace|Symbol|yes|:append|
 |:offset|Offset from which to start matching|Integer|yes|0|
+|:patch|A YAML file specifying patch data|String|yes| |
+
+The :regexp and :text options must be set either in a patch file specified using the
+:patch argument or via arguments in the Fastfile.
 
 ## Example
 

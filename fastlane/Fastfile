@@ -1,6 +1,4 @@
 lane :test do
   apply_patch file: "examples/PatchTestAndroid/app/src/main/AndroidManifest.xml",
-              regexp: %r{^\s*</application>},
-              mode: :prepend,
-              text: "        <meta-data android:name=\"foo\" android:value=\"bar\" />\n"
+              patch: "patch.yaml"
 end

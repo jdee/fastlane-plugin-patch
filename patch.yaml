@@ -1,0 +1,3 @@
+regexp: '^\s*</application>'
+mode: "prepend"
+text: "        <meta-data android:name=\"foo\" android:value=\"bar\" />\n"

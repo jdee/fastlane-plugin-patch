@@ -1,7 +1,33 @@
+require 'yaml'
+
 module Fastlane
   module Actions
     class ApplyPatchAction < Action
       def self.run(params)
+        if params[:patch]
+          # raises
+          patch = YAML.load_file params[:patch]
+
+          # If the :patch option is present, load these params from the
+          # specified file. Action args override.
+          %w{regexp text mode global}.each do |option|
+            value = patch[option]
+            next if value.nil?
+
+            case option.to_sym
+            when :regexp
+              params[:regexp] = /#{value}/
+            when :mode
+              params[:mode] = value.to_sym
+            else
+              params[option.to_sym] = value
+            end
+          end
+        end
+
+        UI.user_error! "Must specify :regexp and :text either in a patch or via arguments" if
+          params[:regexp].nil? || params[:text].nil?
+
         helper = Fastlane::Helper::PatchHelper
         modified_contents = File.open(params[:file], "r") do |f|
           contents = f.read
@@ -43,11 +69,11 @@ module Fastlane
                                       type: String),
           FastlaneCore::ConfigItem.new(key: :regexp,
                                description: "A regular expression to match",
-                                  optional: false,
+                                  optional: true,
                                       type: Regexp),
           FastlaneCore::ConfigItem.new(key: :text,
                                description: "Text to append to the match",
-                                  optional: false,
+                                  optional: true,
                                       type: String),
           FastlaneCore::ConfigItem.new(key: :global,
                                description: "If true, patch all occurrences of the pattern",
@@ -63,7 +89,11 @@ module Fastlane
                                description: ":append, :prepend or :replace",
                                   optional: true,
                              default_value: :append,
-                                      type: Symbol)
+                                      type: Symbol),
+          FastlaneCore::ConfigItem.new(key: :patch,
+                               description: "A YAML file specifying patch data",
+                                  optional: true,
+                                      type: String)
         ]
       end
 
