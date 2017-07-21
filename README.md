@@ -14,7 +14,29 @@ fastlane add_plugin patch
 
 Apply and revert pattern-based patches to any text file.
 
-**Note to author:** Add a more detailed description about this plugin here. If your plugin contains multiple actions, make sure to mention them here.
+```Ruby
+apply_patch file: "examples/PatchTestAndroid/app/src/main/AndroidManifest.xml",
+            regexp: %r{^\s*</application>},
+            mode: :prepend,
+            text: "        <meta-data android:name=\"foo\" android:value=\"bar\" />\n"
+```
+
+This action matches one or all occurrences of a specified regular expression and
+modifies the file contents based on the optional `:mode` parameter. By default,
+the action appends the specified text to the pattern match. It can also prepend
+the text or replace the pattern match with the text. Use an optional `:global`
+parameter to apply the patch to all instances of the regular expression.
+
+### Options
+
+|key|description|type|optional|default value|
+|---|-----------|----|--------|-------------|
+|:file|Absolute or relative path to a file to patch|String|no| |
+|:regexp|A regular expression to match|Regexp|no| |
+|:text|Text to append to the match|String|no| |
+|:global|If true, patch all occurrences of the pattern|Boolean|yes|false|
+|:mode|:append, :prepend or :replace|Symbol|yes|:append|
+|:offset|Offset from which to start matching|Integer|yes|0|
 
 ## Example
 
