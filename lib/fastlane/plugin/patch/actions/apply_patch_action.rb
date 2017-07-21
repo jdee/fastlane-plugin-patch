@@ -5,12 +5,12 @@ module Fastlane
         helper = Fastlane::Helper::PatchHelper
         modified_contents = File.open(params[:file], "r") do |f|
           contents = f.read
-          modified_contents = helper.apply_patch contents,
-                                                 params[:regexp],
-                                                 params[:text],
-                                                 params[:global],
-                                                 params[:mode],
-                                                 params[:offset]
+          helper.apply_patch contents,
+                             params[:regexp],
+                             params[:text],
+                             params[:global],
+                             params[:mode],
+                             params[:offset]
         end
 
         File.open(params[:file], "w") { |f| f.write modified_contents }
