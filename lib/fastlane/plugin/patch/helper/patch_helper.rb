@@ -16,10 +16,10 @@ module Fastlane
           while (matches = regexp.match(contents, search_position))
             patched_pattern =
               case mode
-              when :prepend
-                "#{text}#{matches[0]}"
               when :append
                 "#{matches[0]}#{text}"
+              when :prepend
+                "#{text}#{matches[0]}"
               when :replace
                 text
               else
