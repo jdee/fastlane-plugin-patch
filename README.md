@@ -81,9 +81,21 @@ The :regexp and :text options must be set either in a patch file specified using
 
 ## Example
 
-Check out the [example `Fastfile`](fastlane/Fastfile) to see how to use this plugin. Try it by cloning the repo, running `fastlane install_plugins` and `bundle exec fastlane test`.
+Check out the [example `Fastfile`](fastlane/Fastfile) to see how to use this plugin. Try it by cloning the repo, and running `fastlane install_plugins`.
 
-**Note to author:** Please set up a sample project to make it easy for users to explore what your plugin does. Provide everything that is necessary to try out the plugin in this project (including a sample Xcode/Android project if necessary)
+The examples folder contains an empty Android project called PatchTestAndroid. There is an example
+patch at the repo root in `patch.yaml` that will add a `meta-data` key to the end of the `application`
+element in the Android project's manifest. The Fastfile includes two lanes: `apply` and `revert`.
+
+Apply the patch to `examples/PatchTestAndroid/app/src/main/AndroidManifest.xml`:
+```bash
+fastlane apply
+```
+
+Revert the patch:
+```bash
+fastlane revert
+```
 
 ## Run tests for this plugin
 
