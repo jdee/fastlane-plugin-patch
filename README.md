@@ -35,7 +35,7 @@ define a patch, e.g.:
 **patch.yaml**:
 ```yaml
 regexp: '^\s*</application>'
-mode: 'prepend'
+mode: prepend
 text: "        <meta-data android:name='foo' android:value='bar' />\n"
 global: false
 ```
