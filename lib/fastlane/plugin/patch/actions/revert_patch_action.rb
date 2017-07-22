@@ -32,11 +32,11 @@ module Fastlane
         modified_contents = File.open(params[:file], "r") do |f|
           contents = f.read
           helper.revert_patch contents,
-                             params[:regexp],
-                             params[:text],
-                             params[:global],
-                             params[:mode],
-                             params[:offset]
+                              params[:regexp],
+                              params[:text],
+                              params[:global],
+                              params[:mode],
+                              params[:offset]
         end
 
         File.open(params[:file], "w") { |f| f.write modified_contents }
