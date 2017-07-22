@@ -1,4 +1,9 @@
-lane :test do
+lane :apply do
   apply_patch file: "examples/PatchTestAndroid/app/src/main/AndroidManifest.xml",
               patch: "patch.yaml"
+end
+
+lane :revert do
+  revert_patch file: "examples/PatchTestAndroid/app/src/main/AndroidManifest.xml",
+               patch: "patch.yaml"
 end

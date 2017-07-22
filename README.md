@@ -14,6 +14,8 @@ fastlane add_plugin patch
 
 Apply and revert pattern-based patches to any text file.
 
+### apply_patch action
+
 ```Ruby
 apply_patch file: "examples/PatchTestAndroid/app/src/main/AndroidManifest.xml",
             regexp: %r{^\s*</application>},
@@ -43,6 +45,24 @@ global: false
 apply_patch file: "examples/PatchTestAndroid/app/src/main/AndroidManifest.xml",
             patch: "patch.yaml"
 ```
+
+### revert_patch action
+
+Revert patches by passing the same arguments to the `revert_patch` action:
+
+```Ruby
+revert_patch file: "examples/PatchTestAndroid/app/src/main/AndroidManifest.xml",
+             regexp: %r{^\s*</application>},
+             mode: :prepend,
+             text: "        <meta-data android:name=\"foo\" android:value=\"bar\" />\n"
+```
+
+```Ruby
+revert_patch file: "examples/PatchTestAndroid/app/src/main/AndroidManifest.xml",
+             patch: "patch.yaml"
+```
+
+Patches using the `:replace` mode cannot be reverted.
 
 ### Options
 
