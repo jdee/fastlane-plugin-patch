@@ -52,7 +52,7 @@ module Fastlane
             case mode
             when :append
               suffix = ""
-              if regexp_string.end_with? "^"
+              if regexp_string.end_with? "$"
                 suffix = "\n"
                 regexp_string.sub!(/\$$/, "")
               end
