@@ -29,17 +29,19 @@ module Fastlane
           params[:regexp].nil? || params[:text].nil?
 
         helper = Fastlane::Helper::PatchHelper
-        modified_contents = File.open(params[:file], "r") do |f|
-          contents = f.read
-          helper.apply_patch contents,
-                             params[:regexp],
-                             params[:text],
-                             params[:global],
-                             params[:mode],
-                             params[:offset]
-        end
+        helper.files_from_params(params).each do |file|
+          modified_contents = File.open(file, "r") do |f|
+            contents = f.read
+            helper.apply_patch contents,
+                               params[:regexp],
+                               params[:text],
+                               params[:global],
+                               params[:mode],
+                               params[:offset]
+          end
 
-        File.open(params[:file], "w") { |f| f.write modified_contents }
+          File.open(file, "w") { |f| f.write modified_contents }
+        end
       rescue => e
         UI.user_error! "Error in ApplyPatchAction: #{e.message}\n#{e.backtrace}"
       end
@@ -63,10 +65,10 @@ module Fastlane
 
       def self.available_options
         [
-          FastlaneCore::ConfigItem.new(key: :file,
-                               description: "Absolute or relative path to a file to patch",
+          FastlaneCore::ConfigItem.new(key: :files,
+                               description: "Absolute or relative path(s) to one or more files to patch",
                                   optional: false,
-                                      type: String),
+                                 is_string: false),
           FastlaneCore::ConfigItem.new(key: :regexp,
                                description: "A regular expression to match",
                                   optional: true,

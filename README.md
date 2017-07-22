@@ -17,7 +17,7 @@ Apply and revert pattern-based patches to any text file.
 ### apply_patch action
 
 ```Ruby
-apply_patch file: "examples/PatchTestAndroid/app/src/main/AndroidManifest.xml",
+apply_patch files: "examples/PatchTestAndroid/app/src/main/AndroidManifest.xml",
             regexp: %r{^\s*</application>},
             mode: :prepend,
             text: "        <meta-data android:name=\"foo\" android:value=\"bar\" />\n"
@@ -42,7 +42,7 @@ global: false
 
 **Fastfile**:
 ```Ruby
-apply_patch file: "examples/PatchTestAndroid/app/src/main/AndroidManifest.xml",
+apply_patch files: "examples/PatchTestAndroid/app/src/main/AndroidManifest.xml",
             patch: "patch.yaml"
 ```
 
@@ -51,14 +51,14 @@ apply_patch file: "examples/PatchTestAndroid/app/src/main/AndroidManifest.xml",
 Revert patches by passing the same arguments to the `revert_patch` action:
 
 ```Ruby
-revert_patch file: "examples/PatchTestAndroid/app/src/main/AndroidManifest.xml",
+revert_patch files: "examples/PatchTestAndroid/app/src/main/AndroidManifest.xml",
              regexp: %r{^\s*</application>},
              mode: :prepend,
              text: "        <meta-data android:name=\"foo\" android:value=\"bar\" />\n"
 ```
 
 ```Ruby
-revert_patch file: "examples/PatchTestAndroid/app/src/main/AndroidManifest.xml",
+revert_patch files: "examples/PatchTestAndroid/app/src/main/AndroidManifest.xml",
              patch: "patch.yaml"
 ```
 
@@ -68,7 +68,7 @@ Patches using the `:replace` mode cannot be reverted.
 
 |key|description|type|optional|default value|
 |---|-----------|----|--------|-------------|
-|:file|Absolute or relative path to a file to patch|String|no| |
+|:files|Absolute or relative path(s) to one or more files to patch|Array or String|no| |
 |:regexp|A regular expression to match|Regexp|yes| |
 |:text|Text to append to the match|String|yes| |
 |:global|If true, patch all occurrences of the pattern|Boolean|yes|false|
