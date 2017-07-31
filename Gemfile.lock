@@ -20,6 +20,7 @@ GEM
     declarative (0.0.9)
     declarative-option (0.1.0)
     diff-lcs (1.3)
+    docile (1.1.5)
     domain_name (0.5.20170404)
       unf (>= 0.0.5, < 1.0.0)
     dotenv (2.2.1)
@@ -132,6 +133,7 @@ GEM
     rspec-mocks (3.6.0)
       diff-lcs (>= 1.2.0, < 2.0)
       rspec-support (~> 3.6.0)
+    rspec-simplecov (0.2.2)
     rspec-support (3.6.0)
     rubocop (0.49.1)
       parallel (~> 1.10)
@@ -148,6 +150,11 @@ GEM
       faraday (~> 0.9)
       jwt (~> 1.5)
       multi_json (~> 1.10)
+    simplecov (0.14.1)
+      docile (~> 1.1.0)
+      json (>= 1.8, < 3)
+      simplecov-html (~> 0.10.0)
+    simplecov-html (0.10.1)
     slack-notifier (1.5.1)
     slop (3.6.0)
     terminal-notifier (1.8.0)
@@ -180,7 +187,9 @@ DEPENDENCIES
   pry
   rake
   rspec
+  rspec-simplecov
   rubocop
+  simplecov
 
 BUNDLED WITH
-   1.15.2
+   1.15.3
