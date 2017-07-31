@@ -51,21 +51,9 @@ module Fastlane
           patched_regexp =
             case mode
             when :append
-              suffix = ""
-              if regexp_string.end_with? "$"
-                suffix = "\n"
-                regexp_string.sub!(/\$$/, "")
-              end
-
-              /#{regexp_string}#{Regexp.quote(text)}#{suffix}/m
+              /#{regexp_string}#{Regexp.quote(text)}/m
             when :prepend
-              prefix = ""
-              if regexp_string.start_with? "^"
-                prefix = "\n"
-                regexp_string.sub!(/^\^/, "")
-              end
-
-              /#{prefix}#{Regexp.quote(text)}#{regexp_string}/m
+              /#{Regexp.quote(text)}#{regexp_string}/m
             else
               raise ArgumentError, "Invalid mode argument. Specify :append or :prepend."
             end
