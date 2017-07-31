@@ -75,7 +75,7 @@ module Fastlane
           when String
             params[:files].split(",")
           else
-            raise ArgumentError "Invalid type #{params[:files].class} for :files option. Specify an Array or a String."
+            raise ArgumentError, "Invalid type #{params[:files].class} for :files option. Specify an Array or a String."
           end
         end
       end

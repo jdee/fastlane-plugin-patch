@@ -31,8 +31,7 @@ module Fastlane
         helper = Fastlane::Helper::PatchHelper
         helper.files_from_params(params).each do |file|
           modified_contents = File.open(file, "r") do |f|
-            contents = f.read
-            helper.revert_patch contents,
+            helper.revert_patch f.read,
                                 params[:regexp],
                                 params[:text],
                                 params[:global],
@@ -54,13 +53,12 @@ module Fastlane
         ["Jimmy Dee"]
       end
 
-      def self.return_value
-        # If your method provides a return value, you can describe here what it does
-      end
-
       def self.details
-        # Optional:
-        "More to come"
+        <<-EOF
+          This is a very preliminary plugin to apply and revert patches to text files. One
+          of the main intended use cases for this plugin is source-code modification, e.g.
+          when automatically integrating an SDK.
+        EOF
       end
 
       def self.available_options
@@ -74,7 +72,7 @@ module Fastlane
                                   optional: true,
                                       type: Regexp),
           FastlaneCore::ConfigItem.new(key: :text,
-                               description: "Text to append to the match",
+                               description: "Text used to modify to the match",
                                   optional: true,
                                       type: String),
           FastlaneCore::ConfigItem.new(key: :global,
@@ -100,10 +98,6 @@ module Fastlane
       end
 
       def self.is_supported?(platform)
-        # Adjust this if your plugin only works for a particular platform (iOS vs. Android, for example)
-        # See: https://github.com/fastlane/fastlane/blob/master/fastlane/docs/Platforms.md
-        #
-        # [:ios, :mac, :android].include?(platform)
         true
       end
     end

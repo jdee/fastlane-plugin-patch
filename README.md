@@ -14,13 +14,21 @@ fastlane add_plugin patch
 
 Apply and revert pattern-based patches to any text file.
 
+This is a very preliminary plugin to apply and revert patches to text files. One
+of the main intended use cases for this plugin is source-code modification, e.g.
+when automatically integrating an SDK.
+
+Please provide any feedback via issues in this repo.
+
 ### apply_patch action
 
 ```Ruby
-apply_patch files: "examples/PatchTestAndroid/app/src/main/AndroidManifest.xml",
-            regexp: %r{^\s*</application>},
-            mode: :prepend,
-            text: "        <meta-data android:name=\"foo\" android:value=\"bar\" />\n"
+apply_patch(
+  files: "examples/PatchTestAndroid/app/src/main/AndroidManifest.xml",
+  regexp: %r{^\s*</application>},
+  mode: :prepend,
+  text: "        <meta-data android:name=\"foo\" android:value=\"bar\" />\n"
+)
 ```
 
 This action matches one or all occurrences of a specified regular expression and
@@ -42,8 +50,10 @@ global: false
 
 **Fastfile**:
 ```Ruby
-apply_patch files: "examples/PatchTestAndroid/app/src/main/AndroidManifest.xml",
-            patch: "patch.yaml"
+apply_patch(
+  files: "examples/PatchTestAndroid/app/src/main/AndroidManifest.xml",
+  patch: "patch.yaml"
+)
 ```
 
 ### revert_patch action
@@ -51,15 +61,19 @@ apply_patch files: "examples/PatchTestAndroid/app/src/main/AndroidManifest.xml",
 Revert patches by passing the same arguments to the `revert_patch` action:
 
 ```Ruby
-revert_patch files: "examples/PatchTestAndroid/app/src/main/AndroidManifest.xml",
-             regexp: %r{^\s*</application>},
-             mode: :prepend,
-             text: "        <meta-data android:name=\"foo\" android:value=\"bar\" />\n"
+revert_patch(
+  files: "examples/PatchTestAndroid/app/src/main/AndroidManifest.xml",
+  regexp: %r{^\s*</application>},
+  mode: :prepend,
+  text: "        <meta-data android:name=\"foo\" android:value=\"bar\" />\n"
+)
 ```
 
 ```Ruby
-revert_patch files: "examples/PatchTestAndroid/app/src/main/AndroidManifest.xml",
-             patch: "patch.yaml"
+revert_patch(
+  files: "examples/PatchTestAndroid/app/src/main/AndroidManifest.xml",
+  patch: "patch.yaml"
+)
 ```
 
 Patches using the `:replace` mode cannot be reverted.
