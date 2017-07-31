@@ -1,6 +1,10 @@
 # patch plugin
 
 [![fastlane Plugin Badge](https://rawcdn.githack.com/fastlane/fastlane/master/fastlane/assets/plugin-badge.svg)](https://rubygems.org/gems/fastlane-plugin-patch)
+[![Gem](https://img.shields.io/gem/v/fastlane-plugin-patch.svg?style=flat)](https://rubygems.org/gems/fastlane-plugin-patch)
+[![Downloads](https://img.shields.io/gem/dt/fastlane-plugin-patch.svg?style=flat)](https://rubygems.org/gems/fastlane-plugin-patch)
+[![License](https://img.shields.io/badge/license-MIT-green.svg?style=flat)](https://github.com/jdee/fastlane-plugin-patch/blob/master/LICENSE)
+[![CircleCI](https://img.shields.io/circleci/project/github/jdee/fastlane-plugin-patch.svg)](https://circleci.com/gh/jdee/fastlane-plugin-patch)
 
 ## Getting Started
 
