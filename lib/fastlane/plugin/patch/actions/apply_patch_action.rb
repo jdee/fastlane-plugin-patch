@@ -46,7 +46,7 @@ module Fastlane
       end
 
       def self.description
-        "Apply and revert pattern-based patches to any text file."
+        "Apply pattern-based patches to any text file."
       end
 
       def self.authors
@@ -55,10 +55,29 @@ module Fastlane
 
       def self.details
         <<-EOF
-          This is a very preliminary plugin to apply and revert patches to text files. One
-          of the main intended use cases for this plugin is source-code modification, e.g.
-          when automatically integrating an SDK.
+          Append or prepend text to a specified pattern in a list of files or
+          replace it, once or globally. Patches are specified by arguments or
+          YAML files. Revert the same patches with the revert_patch action.
         EOF
+      end
+
+      def self.example_code
+        [
+          <<-EOF
+            apply_patch(
+              files: "examples/PatchTestAndroid/app/src/main/AndroidManifest.xml",
+              regexp: %r{^\s*</application>},
+              mode: :prepend,
+              text: "        <meta-data android:name=\"foo\" android:value=\"bar\" />\n"
+            )
+          EOF,
+          <<-EOF
+            apply_patch(
+              files: "examples/PatchTestAndroid/app/src/main/AndroidManifest.xml",
+              patch: "patch.yaml"
+            )
+          EOF
+        ]
       end
 
       def self.available_options
