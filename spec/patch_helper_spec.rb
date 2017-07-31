@@ -42,6 +42,20 @@ describe Fastlane::Helper::PatchHelper do
         expect(modified).to eq "alpha\nalpha and a half\nbeta\ngamma\n"
       end
     end
+
+    describe 'global flag' do
+      it 'appends globally' do
+        original = 'alpha alpha alpha'
+        modified = helper.apply_patch original, /alpha/, ' alpha and a half', true, :append, 0
+        expect(modified).to eq 'alpha alpha and a half alpha alpha and a half alpha alpha and a half'
+      end
+
+      it 'prepends globally' do
+        original = 'alpha alpha alpha'
+        modified = helper.apply_patch original, /alpha/, 'alpha and a half ', true, :prepend, 0
+        expect(modified).to eq 'alpha and a half alpha alpha and a half alpha alpha and a half alpha'
+      end
+    end
   end
 
   describe 'revert_patch' do
@@ -77,6 +91,20 @@ describe Fastlane::Helper::PatchHelper do
         original = "alpha\nalpha and a half\nbeta\ngamma\n"
         modified = helper.revert_patch original, /^beta/, "alpha and a half\n", false, :prepend, 0
         expect(modified).to eq "alpha\nbeta\ngamma\n"
+      end
+    end
+
+    describe 'global flag' do
+      it 'reverts :append patches globally' do
+        original = 'alpha alpha and a half alpha alpha and a half alpha alpha and a half'
+        modified = helper.revert_patch original, /alpha/, ' alpha and a half', true, :append, 0
+        expect(modified).to eq 'alpha alpha alpha'
+      end
+
+      it 'reverts :prepend patches globally' do
+        original = 'alpha and a half alpha alpha and a half alpha alpha and a half alpha'
+        modified = helper.revert_patch original, /alpha/, 'alpha and a half ', true, :prepend, 0
+        expect(modified).to eq 'alpha alpha alpha'
       end
     end
   end
