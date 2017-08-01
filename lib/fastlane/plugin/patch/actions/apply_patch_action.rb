@@ -55,9 +55,9 @@ module Fastlane
 
       def self.details
         <<-EOF
-          Append or prepend text to a specified pattern in a list of files or
-          replace it, once or globally. Patches are specified by arguments or
-          YAML files. Revert the same patches with the revert_patch action.
+Append or prepend text to a specified pattern in a list of files or
+replace it, once or globally. Patches are specified by arguments or
+YAML files. Revert the same patches with the revert_patch action.
         EOF
       end
 

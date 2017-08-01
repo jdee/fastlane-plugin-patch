@@ -55,8 +55,8 @@ module Fastlane
 
       def self.details
         <<-EOF
-          Revert a patch by specifying the arguments provided to apply_patch
-          using arguments or the same YAML patch files.
+Revert a patch by specifying the arguments provided to apply_patch
+using arguments or the same YAML patch files.
         EOF
       end
 
