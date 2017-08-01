@@ -29,7 +29,10 @@ module Fastlane
           params[:regexp].nil? || params[:text].nil?
 
         helper = Fastlane::Helper::PatchHelper
-        helper.files_from_params(params).each do |file|
+        files = helper.files_from_params params
+        UI.user_error! "Must specify at least one file to revert using the :files option" if files.empty?
+
+        files.each do |file|
           modified_contents = File.open(file, "r") do |f|
             helper.revert_patch f.read,
                                 params[:regexp],
