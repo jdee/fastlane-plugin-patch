@@ -28,7 +28,7 @@ module Fastlane
         UI.user_error! "Must specify :regexp and :text either in a patch or via arguments" if
           params[:regexp].nil? || params[:text].nil?
 
-        helper = Fastlane::Helper::PatchHelper
+        helper = Helper::PatchHelper
         files = helper.files_from_params params
         UI.user_error! "Must specify at least one file to patch using the :files option" if files.empty?
 
