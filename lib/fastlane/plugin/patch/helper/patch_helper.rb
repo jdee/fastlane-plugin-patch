@@ -21,7 +21,7 @@ module Fastlane
               when :prepend
                 "#{text}#{matches[0]}"
               when :replace
-                text
+                matches[0].sub regexp, text
               else
                 raise ArgumentError, "Invalid mode argument. Specify :append, :prepend or :replace."
               end

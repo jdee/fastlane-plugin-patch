@@ -60,6 +60,19 @@ apply_patch(
 )
 ```
 
+#### Capture groups
+
+Capture groups may be used in `:replace` mode.
+
+```Ruby
+apply_patch(
+  files: "MyPod.podspec",
+  regexp: /(s.name\s*=\s*)"MyPod"/,
+  text: '\1"MyOtherPod"',
+  mode: :replace
+)
+```
+
 ### revert_patch action
 
 Revert patches by passing the same arguments to the `revert_patch` action:

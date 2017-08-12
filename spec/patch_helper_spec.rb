@@ -21,6 +21,12 @@ describe Fastlane::Helper::PatchHelper do
         expect(modified).to eq 'alpha two gamma'
       end
 
+      it 'recognizes capture groups in :replace mode' do
+        original = 'alpha beta gamma'
+        modified = helper.apply_patch original, /(beta)/, '\1 two', false, :replace, 0
+        expect(modified).to eq 'alpha beta two gamma'
+      end
+
       it 'raises for any other mode' do
         original = 'alpha beta gamma'
         expect do
@@ -116,6 +122,14 @@ describe Fastlane::Helper::PatchHelper do
 
     it 'splits at commas when a string is passed' do
       expect(helper.files_from_params(files: 'a,b,c')).to eq %w{a b c}
+    end
+
+    it 'returns absolute paths when absolute paths passed in an array' do
+      expect(helper.files_from_params(files: %w{/a/b/c})).to eq %w{/a/b/c}
+    end
+
+    it 'returns absolute paths when absolute paths passed in a string' do
+      expect(helper.files_from_params(files: '/a/b/c')).to eq %w{/a/b/c}
     end
 
     it 'raises for any other type' do
