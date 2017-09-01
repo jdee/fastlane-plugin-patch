@@ -24,10 +24,10 @@ when automatically integrating an SDK.
 
 Please provide any feedback via issues in this repo.
 
-### apply_patch action
+### patch action
 
 ```Ruby
-apply_patch(
+patch(
   files: "examples/PatchTestAndroid/app/src/main/AndroidManifest.xml",
   regexp: %r{^\s*</application>},
   mode: :prepend,
@@ -54,7 +54,7 @@ global: false
 
 **Fastfile**:
 ```Ruby
-apply_patch(
+patch(
   files: "examples/PatchTestAndroid/app/src/main/AndroidManifest.xml",
   patch: "patch.yaml"
 )
@@ -65,7 +65,7 @@ apply_patch(
 Capture groups may be used in `:replace` mode.
 
 ```Ruby
-apply_patch(
+patch(
   files: "MyPod.podspec",
   regexp: /(s.name\s*=\s*)"MyPod"/,
   text: '\1"MyOtherPod"',
@@ -73,23 +73,25 @@ apply_patch(
 )
 ```
 
-### revert_patch action
+#### Revert patches
 
-Revert patches by passing the same arguments to the `revert_patch` action:
+Revert patches by passing the optional `:revert` parameter:
 
 ```Ruby
-revert_patch(
+patch(
   files: "examples/PatchTestAndroid/app/src/main/AndroidManifest.xml",
   regexp: %r{^\s*</application>},
   mode: :prepend,
-  text: "        <meta-data android:name=\"foo\" android:value=\"bar\" />\n"
+  text: "        <meta-data android:name=\"foo\" android:value=\"bar\" />\n",
+  revert: true
 )
 ```
 
 ```Ruby
-revert_patch(
+patch(
   files: "examples/PatchTestAndroid/app/src/main/AndroidManifest.xml",
   patch: "patch.yaml"
+  revert: true
 )
 ```
 
@@ -106,9 +108,13 @@ Patches using the `:replace` mode cannot be reverted.
 |:mode|:append, :prepend or :replace|Symbol|yes|:append|
 |:offset|Offset from which to start matching|Integer|yes|0|
 |:patch|A YAML file specifying patch data|String|yes| |
+|:revert|Set to true to revert the specified patch rather than apply it|Boolean|yes|false|
 
 The :regexp and :text options must be set either in a patch file specified using the
 :patch argument or via arguments in the Fastfile.
+
+**Note**: The `apply_patch` and `revert_patch` actions have been deprecated in favor of a single
+`patch` action with an optional `:revert` parameter.
 
 ## Example
 

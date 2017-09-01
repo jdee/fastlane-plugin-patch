@@ -1,9 +1,10 @@
 lane :apply do
-  apply_patch files: "examples/PatchTestAndroid/app/src/main/AndroidManifest.xml",
-              patch: "patch.yaml"
+  patch files: "examples/PatchTestAndroid/app/src/main/AndroidManifest.xml",
+        patch: "patch.yaml"
 end
 
 lane :revert do
-  revert_patch files: "examples/PatchTestAndroid/app/src/main/AndroidManifest.xml",
-               patch: "patch.yaml"
+  patch files: "examples/PatchTestAndroid/app/src/main/AndroidManifest.xml",
+        patch: "patch.yaml",
+        revert: true
 end
