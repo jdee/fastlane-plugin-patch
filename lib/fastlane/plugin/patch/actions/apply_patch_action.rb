@@ -122,6 +122,16 @@ YAML files. Revert the same patches with the revert_patch action.
       def self.is_supported?(platform)
         true
       end
+
+      def self.deprecated_notes
+        <<-EOF
+Please use the patch action instead.
+        EOF
+      end
+
+      def self.category
+        :deprecated
+      end
     end
   end
 end

@@ -2,7 +2,7 @@ require 'yaml'
 
 module Fastlane
   module Actions
-    class RevertPatchAction < Action
+    class PatchAction < Action
       def self.run(params)
         if params[:patch]
           # raises
@@ -30,26 +30,35 @@ module Fastlane
 
         helper = Helper::PatchHelper
         files = helper.files_from_params params
-        UI.user_error! "Must specify at least one file to revert using the :files option" if files.empty?
+        UI.user_error! "Must specify at least one file to patch using the :files option" if files.empty?
 
         files.each do |file|
           modified_contents = File.open(file, "r") do |f|
-            helper.revert_patch f.read,
-                                params[:regexp],
-                                params[:text],
-                                params[:global],
-                                params[:mode],
-                                params[:offset]
+            if params[:revert]
+              helper.revert_patch f.read,
+                                  params[:regexp],
+                                  params[:text],
+                                  params[:global],
+                                  params[:mode],
+                                  params[:offset]
+            else
+              helper.apply_patch f.read,
+                                 params[:regexp],
+                                 params[:text],
+                                 params[:global],
+                                 params[:mode],
+                                 params[:offset]
+            end
           end
 
           File.open(file, "w") { |f| f.write modified_contents }
         end
       rescue => e
-        UI.user_error! "Error in RevertPatchAction: #{e.message}\n#{e.backtrace}"
+        UI.user_error! "Error in PatchAction: #{e.message}\n#{e.backtrace}"
       end
 
       def self.description
-        "Revert the action of apply_patch"
+        "Apply pattern-based patches to any text file."
       end
 
       def self.authors
@@ -58,15 +67,16 @@ module Fastlane
 
       def self.details
         <<-EOF
-Revert a patch by specifying the arguments provided to apply_patch
-using arguments or the same YAML patch files.
+Append or prepend text to a specified pattern in a list of files or
+replace it, once or globally. Patches are specified by arguments or
+YAML files. Revert the same patches with the revert option.
         EOF
       end
 
       def self.example_code
         [
           <<-EOF
-            revert_patch(
+            patch(
               files: "examples/PatchTestAndroid/app/src/main/AndroidManifest.xml",
               regexp: %r{^\s*</application>},
               mode: :prepend,
@@ -74,11 +84,19 @@ using arguments or the same YAML patch files.
             )
           EOF,
           <<-EOF
-            revert_patch(
+            patch(
               files: "examples/PatchTestAndroid/app/src/main/AndroidManifest.xml",
               patch: "patch.yaml"
             )
+          EOF,
+          <<-EOF
+            patch(
+              files: "examples/PatchTestAndroid/app/src/main/AndroidManifest.xml",
+              patch: "patch.yaml",
+              revert: true
+            )
           EOF
+
         ]
       end
 
@@ -107,14 +125,19 @@ using arguments or the same YAML patch files.
                              default_value: 0,
                                       type: Integer),
           FastlaneCore::ConfigItem.new(key: :mode,
-                               description: ":append or :prepend",
+                               description: ":append, :prepend or :replace",
                                   optional: true,
                              default_value: :append,
                                       type: Symbol),
           FastlaneCore::ConfigItem.new(key: :patch,
                                description: "A YAML file specifying patch data",
                                   optional: true,
-                                      type: String)
+                                      type: String),
+          FastlaneCore::ConfigItem.new(key: :revert,
+                               description: "Set to true to revert the specified patch rather than apply it",
+                                  optional: true,
+                             default_value: false,
+                                 is_string: false)
         ]
       end
 
@@ -122,14 +145,8 @@ using arguments or the same YAML patch files.
         true
       end
 
-      def self.deprecated_notes
-        <<-EOF
-Please use the patch action with the :revert option instead.
-        EOF
-      end
-
       def self.category
-        :deprecated
+        :project
       end
     end
   end
