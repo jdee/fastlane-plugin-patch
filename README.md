@@ -67,7 +67,7 @@ Capture groups may be used in `:replace` mode.
 ```Ruby
 patch(
   files: "MyPod.podspec",
-  regexp: /(s.name\s*=\s*)"MyPod"/,
+  regexp: /(s\.name\s*=\s*)"MyPod"/,
   text: '\1"MyOtherPod"',
   mode: :replace
 )
