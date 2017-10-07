@@ -73,6 +73,7 @@ patch(
   text: '\1"MyOtherPod"',
   mode: :replace
 )
+```
 
 Patches in `:append` mode using capture groups in the text argument may be
 reverted. This is not currently supported in `:prepend` mode.
