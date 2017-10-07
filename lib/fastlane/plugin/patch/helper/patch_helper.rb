@@ -1,3 +1,32 @@
+class String
+  # Replace capture group references in self with appropriate
+  # data from matches. Modifies the receiver. The receiver
+  # need not match the matches.regexp.
+  #
+  # :matches: A MatchData object returned by Regexp#match
+  def apply_matches!(matches)
+    search_position = 0
+    while (m = /\\(\d+)/.match(self, search_position))
+      capture_group = m[1].to_i
+      search_position = index m[0]
+      gsub! m[0], matches[capture_group]
+      search_position += matches[capture_group].length
+    end
+    nil
+  end
+
+  # Return a copy of the receiver with capture group references
+  # in self replaced by appropriate data from matches. The receiver
+  # need not match the matches.regexp.
+  #
+  # :matches: A MatchData object returned by Regexp#match
+  def apply_matches(matches)
+    string = clone
+    string.apply_matches! matches
+    string
+  end
+end
+
 module Fastlane
   module Helper
     class PatchHelper
@@ -17,9 +46,9 @@ module Fastlane
             patched_pattern =
               case mode
               when :append
-                "#{matches[0]}#{text}"
+                "#{matches[0]}#{text.apply_matches matches}"
               when :prepend
-                "#{text}#{matches[0]}"
+                "#{text.apply_matches matches}#{matches[0]}"
               when :replace
                 matches[0].sub regexp, text
               else
@@ -27,8 +56,8 @@ module Fastlane
               end
 
             contents = "#{matches.pre_match}#{patched_pattern}#{matches.post_match}"
-            search_position = matches.pre_match.length + patched_pattern.length
             break unless global
+            search_position = matches.pre_match.length + patched_pattern.length
           end
           contents
         end
@@ -51,18 +80,24 @@ module Fastlane
           patched_regexp =
             case mode
             when :append
-              /#{regexp_string}#{Regexp.quote(text)}/m
+              /#{regexp_string}#{text}/m
             when :prepend
-              /#{Regexp.quote(text)}#{regexp_string}/m
+              # TODO: Capture groups aren't currently revertible in :prepend mode.
+              # This patched regexp can turn into something like /\1.*(\d+)/.
+              # The capture group reference cannot occur in the regexp before definition
+              # of the group. This would have to be transformed to something like
+              # /(\d+).*\1/. Patch reversion is probably not a major use case right
+              # now, so ignore for the moment.
+              /#{text}#{regexp_string}/m
             else
               raise ArgumentError, "Invalid mode argument. Specify :append or :prepend."
             end
 
           while (matches = patched_regexp.match(contents, search_position))
-            reverted_text = matches[0].sub(text, '')
+            reverted_text = matches[0].sub(text.apply_matches(matches), '')
             contents = "#{matches.pre_match}#{reverted_text}#{matches.post_match}"
-            search_position = matches.pre_match.length + reverted_text.length
             break unless global
+            search_position = matches.pre_match.length + reverted_text.length
           end
 
           contents
