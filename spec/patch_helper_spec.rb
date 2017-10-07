@@ -1,3 +1,38 @@
+describe String do
+  describe '#apply_matches!' do
+    it 'applies match data to an unrelated string' do
+      text = '\1 abc'
+      matches = /(\d+)/.match "123"
+      text.apply_matches! matches
+      expect(text).to eq "123 abc"
+    end
+
+    it 'handles repeated instances of the same capture group' do
+      text = '\1 \1 abc'
+      matches = /(\d+)/.match "123"
+      text.apply_matches! matches
+      expect(text).to eq "123 123 abc"
+    end
+
+    it 'replaces multiple capture groups' do
+      text = '\1 \2 abc'
+      matches = /(\d+)(.*)/.match "123xyz"
+      text.apply_matches! matches
+      expect(text).to eq "123 xyz abc"
+    end
+  end
+
+  describe '#apply_matches' do
+    it 'returns clone.apply_matches!' do
+      text = '\1 \2 abc'
+      matches = /(\d+)(.*)/.match "123xyz"
+      new_text = text.apply_matches matches
+      expect(new_text).to eq "123 xyz abc"
+      expect(text).to eq '\1 \2 abc'
+    end
+  end
+end
+
 describe Fastlane::Helper::PatchHelper do
   let (:helper) { Fastlane::Helper::PatchHelper }
 
@@ -25,6 +60,18 @@ describe Fastlane::Helper::PatchHelper do
         original = 'alpha beta gamma'
         modified = helper.apply_patch original, /(beta)/, '\1 two', false, :replace, 0
         expect(modified).to eq 'alpha beta two gamma'
+      end
+
+      it 'recognizes capture groups in :append mode' do
+        original = 'alpha beta gamma'
+        modified = helper.apply_patch original, /(beta)/, ' \1 and a half', false, :append, 0
+        expect(modified).to eq 'alpha beta beta and a half gamma'
+      end
+
+      it 'recognizes capture groups in :prepend mode' do
+        original = 'alpha beta gamma'
+        modified = helper.apply_patch original, /(beta)/, '\1 and a half ', false, :prepend, 0
+        expect(modified).to eq 'alpha beta and a half beta gamma'
       end
 
       it 'raises for any other mode' do
@@ -75,6 +122,19 @@ describe Fastlane::Helper::PatchHelper do
       it 'reverts a patch applied in :prepend mode' do
         original = 'alpha alpha and a half beta gamma'
         modified = helper.revert_patch original, /beta/, 'alpha and a half ', false, :prepend, 0
+        expect(modified).to eq 'alpha beta gamma'
+      end
+
+      it 'recognizes capture groups in :append mode' do
+        original = 'alpha beta beta and a half gamma'
+        modified = helper.revert_patch original, /(beta)/, ' \1 and a half', false, :append, 0
+        expect(modified).to eq 'alpha beta gamma'
+      end
+
+      it 'recognizes capture groups in :prepend mode' do
+        pending 'not working with prepend atm'
+        original = 'alpha beta and a half beta gamma'
+        modified = helper.revert_patch original, /(beta)/, '\1 and a half ', false, :prepend, 0
         expect(modified).to eq 'alpha beta gamma'
       end
 

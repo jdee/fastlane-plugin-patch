@@ -62,7 +62,9 @@ patch(
 
 #### Capture groups
 
-Capture groups may be used in `:replace` mode.
+Capture groups may be used within the text argument in any mode. Note that
+this works best without interpolation (single quotes or %q). If you use double
+quotes, the backslash must be escaped, e.g. `text: "\\1\"MyOtherpod\""`.
 
 ```Ruby
 patch(
@@ -71,7 +73,9 @@ patch(
   text: '\1"MyOtherPod"',
   mode: :replace
 )
-```
+
+Patches in `:append` mode using capture groups in the text argument may be
+reverted. This is not currently supported in `:prepend` mode.
 
 #### Revert patches
 
