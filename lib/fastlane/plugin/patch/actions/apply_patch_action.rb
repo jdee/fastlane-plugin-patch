@@ -34,12 +34,12 @@ module Fastlane
 
         files.each do |file|
           modified_contents = File.open(file, "r") do |f|
-            helper.apply_patch f.read,
-                               params[:regexp],
-                               params[:text],
-                               params[:global],
-                               params[:mode],
-                               params[:offset]
+            PatternPatch::Utilities.apply_patch f.read,
+                                                params[:regexp],
+                                                params[:text],
+                                                params[:global],
+                                                params[:mode],
+                                                params[:offset]
           end
 
           File.open(file, "w") { |f| f.write modified_contents }
