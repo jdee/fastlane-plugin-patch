@@ -1,3 +1,4 @@
+require 'pattern_patch'
 require 'yaml'
 
 module Fastlane
@@ -34,12 +35,12 @@ module Fastlane
 
         files.each do |file|
           modified_contents = File.open(file, "r") do |f|
-            helper.revert_patch f.read,
-                                params[:regexp],
-                                params[:text],
-                                params[:global],
-                                params[:mode],
-                                params[:offset]
+            PatternPatch::Utilities.revert_patch f.read,
+                                                 params[:regexp],
+                                                 params[:text],
+                                                 params[:global],
+                                                 params[:mode],
+                                                 params[:offset]
           end
 
           File.open(file, "w") { |f| f.write modified_contents }

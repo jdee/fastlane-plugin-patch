@@ -2,6 +2,7 @@ PATH
   remote: .
   specs:
     fastlane-plugin-patch (0.4.0)
+      pattern_patch
 
 GEM
   remote: https://rubygems.org/
@@ -106,6 +107,7 @@ GEM
     parallel (1.12.0)
     parser (2.4.0.0)
       ast (~> 2.2)
+    pattern_patch (0.1.0)
     plist (3.3.0)
     powerpack (0.1.1)
     pry (0.10.4)
