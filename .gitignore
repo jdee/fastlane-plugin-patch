@@ -1,4 +1,5 @@
 *.gem
+Gemfile.lock
 .idea
 
 ## Documentation cache and generated files:
