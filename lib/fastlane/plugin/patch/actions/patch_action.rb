@@ -1,58 +1,19 @@
 require 'pattern_patch'
-require 'yaml'
 
 module Fastlane
   module Actions
     class PatchAction < Action
       def self.run(params)
         if params[:patch]
-          # raises
-          patch = YAML.load_file params[:patch]
-
-          # If the :patch option is present, load these params from the
-          # specified file. Action args override.
-          %w{regexp text mode global}.each do |option|
-            value = patch[option]
-            next if value.nil?
-
-            case option.to_sym
-            when :regexp
-              params[:regexp] = /#{value}/
-            when :mode
-              params[:mode] = value.to_sym
-            else
-              params[option.to_sym] = value
-            end
-          end
+          patch = PatternPatch::Patch.from_yaml params[:patch]
+        else
+          patch = PatternPatch::Patch.new params
         end
 
-        UI.user_error! "Must specify :regexp and :text either in a patch or via arguments" if
-          params[:regexp].nil? || params[:text].nil?
-
-        helper = Helper::PatchHelper
-        files = helper.files_from_params params
-        UI.user_error! "Must specify at least one file to patch using the :files option" if files.empty?
-
-        files.each do |file|
-          modified_contents = File.open(file, "r") do |f|
-            if params[:revert]
-              PatternPatch::Utilities.revert_patch f.read,
-                                                   params[:regexp],
-                                                   params[:text],
-                                                   params[:global],
-                                                   params[:mode],
-                                                   params[:offset]
-            else
-              PatternPatch::Utilities.apply_patch f.read,
-                                                  params[:regexp],
-                                                  params[:text],
-                                                  params[:global],
-                                                  params[:mode],
-                                                  params[:offset]
-            end
-          end
-
-          File.open(file, "w") { |f| f.write modified_contents }
+        if params[:revert]
+          patch.revert params[:files], offset: params[:offset]
+        else
+          patch.apply params[:files], offset: params[:offset]
         end
       rescue => e
         UI.user_error! "Error in PatchAction: #{e.message}\n#{e.backtrace}"
@@ -105,8 +66,8 @@ YAML files. Revert the same patches with the revert option.
         [
           FastlaneCore::ConfigItem.new(key: :files,
                                description: "Absolute or relative path(s) to one or more files to patch",
-                                  optional: false,
-                                 is_string: false),
+                                      type: Array,
+                                  optional: false),
           FastlaneCore::ConfigItem.new(key: :regexp,
                                description: "A regular expression to match",
                                   optional: true,
