@@ -4,7 +4,10 @@ require 'simplecov'
 require 'rspec/simplecov'
 
 # SimpleCov.minimum_coverage 95
-SimpleCov.start
+SimpleCov.start do
+  # Don't include these deprecated actions in coverage.
+  add_filter /(apply|revert)/
+end
 
 # This module is only used to check the environment is currently a testing env
 module SpecHelper

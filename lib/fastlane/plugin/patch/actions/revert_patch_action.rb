@@ -1,5 +1,4 @@
 require 'pattern_patch'
-require 'yaml'
 
 module Fastlane
   module Actions
