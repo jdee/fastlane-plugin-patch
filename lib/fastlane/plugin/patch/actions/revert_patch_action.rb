@@ -1,50 +1,16 @@
 require 'pattern_patch'
-require 'yaml'
 
 module Fastlane
   module Actions
     class RevertPatchAction < Action
       def self.run(params)
         if params[:patch]
-          # raises
-          patch = YAML.load_file params[:patch]
-
-          # If the :patch option is present, load these params from the
-          # specified file. Action args override.
-          %w{regexp text mode global}.each do |option|
-            value = patch[option]
-            next if value.nil?
-
-            case option.to_sym
-            when :regexp
-              params[:regexp] = /#{value}/
-            when :mode
-              params[:mode] = value.to_sym
-            else
-              params[option.to_sym] = value
-            end
-          end
+          patch = PatternPatch::Patch.from_yaml params[:patch]
+        else
+          patch = PatternPatch::Patch.new params
         end
 
-        UI.user_error! "Must specify :regexp and :text either in a patch or via arguments" if
-          params[:regexp].nil? || params[:text].nil?
-
-        helper = Helper::PatchHelper
-        files = helper.files_from_params params
-        UI.user_error! "Must specify at least one file to revert using the :files option" if files.empty?
-
-        files.each do |file|
-          modified_contents = File.open(file, "r") do |f|
-            PatternPatch::Utilities.revert_patch f.read,
-                                                 params[:regexp],
-                                                 params[:text],
-                                                 params[:global],
-                                                 params[:mode],
-                                                 params[:offset]
-          end
-
-          File.open(file, "w") { |f| f.write modified_contents }
-        end
+        patch.revert params[:files], offset: params[:offset]
       rescue => e
         UI.user_error! "Error in RevertPatchAction: #{e.message}\n#{e.backtrace}"
       end

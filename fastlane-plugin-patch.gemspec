@@ -18,7 +18,7 @@ Gem::Specification.new do |spec|
   spec.test_files    = spec.files.grep(%r{^(test|spec|features)/})
   spec.require_paths = ['lib']
 
-  spec.add_dependency 'pattern_patch'
+  spec.add_dependency 'pattern_patch', '>= 0.5.1'
 
   spec.add_development_dependency 'pry'
   spec.add_development_dependency 'bundler'
